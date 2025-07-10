@@ -1,0 +1,29 @@
+{
+  "name": "Product Gallery",
+  "settings": [
+    {
+      "type": "number",
+      "id": "slides_per_view",
+      "label": "Slides per view",
+      "default": 1
+    },
+    {
+      "type": "number",
+      "id": "space_between",
+      "label": "Space between slides (px)",
+      "default": 10
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show navigation arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pagination",
+      "label": "Show pagination",
+      "default": true
+    }
+  ]
+}

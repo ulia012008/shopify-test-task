@@ -1,0 +1,49 @@
+{% assign selected_color = product.selected_or_first_available_variant.option1 %}
+<div class="swiper-container" data-color="{{ selected_color | downcase }}">
+  <div class="swiper-wrapper">
+    {% for media in product.media %}
+      {% if media.alt contains selected_color %}
+        <div class="swiper-slide">
+          {{ media | media_tag }}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% if section.settings.show_arrows %}
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+  {% endif %}
+  {% if section.settings.show_pagination %}
+    <div class="swiper-pagination"></div>
+  {% endif %}
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var swiper = new Swiper('.swiper-container', {
+      slidesPerView: {{ section.settings.slides_per_view }},
+      spaceBetween: {{ section.settings.space_between }},
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+    });
+
+    document.querySelectorAll('[name="options[Color]"]').forEach(function (radio) {
+      radio.addEventListener('change', function () {
+        const selectedColor = this.value.toLowerCase();
+        const slides = document.querySelectorAll('.swiper-slide');
+
+        slides.forEach(slide => {
+          slide.style.display = slide.innerHTML.toLowerCase().includes(selectedColor) ? 'block' : 'none';
+        });
+
+        swiper.update();
+      });
+    });
+  });
+</script>
