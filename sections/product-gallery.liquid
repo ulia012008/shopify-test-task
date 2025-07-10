@@ -1,95 +1,9 @@
-{% assign selected_color = product.selected_or_first_available_variant.option1 %}
-
-<div class="swiper-container" data-color="{{ selected_color | downcase }}">
+<div class="swiper-container">
   <div class="swiper-wrapper">
     {% for media in product.media %}
-      {% if media.alt contains selected_color %}
-        <div class="swiper-slide">
-          {{ media | media_tag }}
-        </div>
-      {% endif %}
+      <div class="swiper-slide" data-color="{{ media.alt | downcase }}">
+        {{ media | media_tag }}
+      </div>
     {% endfor %}
   </div>
-
-  {% if section.settings.show_arrows %}
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
-  {% endif %}
-
-  {% if section.settings.show_pagination %}
-    <div class="swiper-pagination"></div>
-  {% endif %}
 </div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    var swiper = new Swiper('.swiper-container', {
-      slidesPerView: {{ section.settings.slides_per_view }},
-      spaceBetween: {{ section.settings.space_between }},
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
-      pagination: {
-        el: '.swiper-pagination',
-        clickable: true,
-      },
-    });
-
-    document.querySelectorAll('[name="options[Color]"]').forEach(function (radio) {
-      radio.addEventListener('change', function () {
-        const selectedColor = this.value.toLowerCase();
-        const slides = document.querySelectorAll('.swiper-slide');
-
-        slides.forEach(slide => {
-          slide.style.display = slide.innerHTML.toLowerCase().includes(selectedColor) ? 'block' : 'none';
-        });
-
-        swiper.update();
-      });
-    });
-  });
-</script>
-
-{% schema %}
-{
-  "name": "Product Gallery Swiper",
-  "settings": [
-    {
-      "type": "checkbox",
-      "id": "show_arrows",
-      "label": "Show navigation arrows",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_pagination",
-      "label": "Show pagination dots",
-      "default": true
-    },
-    {
-      "type": "range",
-      "id": "slides_per_view",
-      "label": "Slides per view",
-      "min": 1,
-      "max": 4,
-      "step": 1,
-      "default": 1
-    },
-    {
-      "type": "range",
-      "id": "space_between",
-      "label": "Space between slides (px)",
-      "min": 0,
-      "max": 50,
-      "step": 5,
-      "default": 10
-    }
-  ],
-  "presets": [
-    {
-      "name": "Product Gallery Swiper"
-    }
-  ]
-}
-{% endschema %}
