@@ -1,4 +1,5 @@
 {% assign selected_color = product.selected_or_first_available_variant.option1 %}
+
 <div class="swiper-container" data-color="{{ selected_color | downcase }}">
   <div class="swiper-wrapper">
     {% for media in product.media %}
@@ -9,10 +10,12 @@
       {% endif %}
     {% endfor %}
   </div>
+
   {% if section.settings.show_arrows %}
     <div class="swiper-button-next"></div>
     <div class="swiper-button-prev"></div>
   {% endif %}
+
   {% if section.settings.show_pagination %}
     <div class="swiper-pagination"></div>
   {% endif %}
@@ -47,3 +50,46 @@
     });
   });
 </script>
+
+{% schema %}
+{
+  "name": "Product Gallery Swiper",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show navigation arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pagination",
+      "label": "Show pagination dots",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "slides_per_view",
+      "label": "Slides per view",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "space_between",
+      "label": "Space between slides (px)",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "default": 10
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Gallery Swiper"
+    }
+  ]
+}
+{% endschema %}
