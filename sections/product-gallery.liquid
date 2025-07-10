@@ -1,9 +1,0 @@
-<div class="swiper-container">
-  <div class="swiper-wrapper">
-    {% for media in product.media %}
-      <div class="swiper-slide" data-color="{{ media.alt | downcase }}">
-        {{ media | media_tag }}
-      </div>
-    {% endfor %}
-  </div>
-</div>

@@ -1,0 +1,110 @@
+{% schema %}
+{
+  "name": "Product Gallery Swiper",
+  "settings": [
+    {
+      "type": "range",
+      "id": "slides_per_view",
+      "label": "Слайдів на екрані (ПК)",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "space_between",
+      "label": "Відступ між слайдами (px)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "default": 10
+    },
+    {
+      "type": "checkbox",
+      "id": "pagination",
+      "label": "Показати пагінацію",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "navigation",
+      "label": "Показати стрілки",
+      "default": true
+    }
+  ],
+  "presets": [{ "name": "Product Swiper Gallery" }]
+}
+{% endschema %}
+
+<div class="swiper product-swiper">
+  <div class="swiper-wrapper">
+    {% for image in product.images %}
+      <div class="swiper-slide" data-color="{{ image.alt | downcase }}">
+        <img src="{{ image | img_url: '600x600' }}" alt="{{ image.alt }}">
+      </div>
+    {% endfor %}
+    
+  </div>
+  <div class="product-details">
+  <h2>{{ product.title }}</h2>
+  <div class="product-description">
+    {{ product.description }}
+  </div>
+</div>
+
+  {% if section.settings.pagination %}
+    <div class="swiper-pagination"></div>
+  {% endif %}
+
+  {% if section.settings.navigation %}
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+  {% endif %}
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (typeof Swiper !== "undefined") {
+      const swiper = new Swiper(".product-swiper", {
+        slidesPerView: {{ section.settings.slides_per_view }},
+        spaceBetween: {{ section.settings.space_between }},
+        pagination: {{ section.settings.pagination | json }} ? {
+          el: ".swiper-pagination",
+          clickable: true
+        } : false,
+        navigation: {{ section.settings.navigation | json }} ? {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev"
+        } : false,
+        breakpoints: {slidesPerView: 1,
+          768: {
+            slidesPerView: 2,
+          },
+          1024: {
+            slidesPerView: {{ section.settings.slides_per_view }},
+          }
+        }
+      });
+
+      // 🎨 Фільтрація фото по кольору (через alt)
+      const colorRadios = document.querySelectorAll('input[name^="Color"]');
+      colorRadios.forEach(radio => {
+        radio.addEventListener("change", function () {
+          const selectedColor = this.value.toLowerCase();
+          document.querySelectorAll(".swiper-slide").forEach(slide => {
+            slide.style.display = slide.dataset.color === selectedColor ? "block" : "none";
+          });
+          swiper.update();
+        });
+      });
+    }
+  });
+</script>
+
+<style>
+  .swiper-slide img {
+    width: 100%;
+    height: auto;
+  }
+</style>
